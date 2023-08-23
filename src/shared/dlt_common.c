@@ -4149,6 +4149,12 @@ int16_t dlt_getloginfo_conv_ascii_to_uint16_t(char *rp, int *rp_count)
     if ((rp == NULL) || (rp_count == NULL))
         return -1;
 
+#if (BYTE_ORDER == BIG_ENDIAN)
+    num_work[0] = *(rp + *rp_count + 0);
+    num_work[1] = *(rp + *rp_count + 1);
+    num_work[2] = *(rp + *rp_count + 2);
+    num_work[3] = *(rp + *rp_count + 3);
+#else
     /* ------------------------------------------------------
      *  from: [89 13 ] -> to: ['+0x'1389\0] -> to num
      *  ------------------------------------------------------ */
@@ -4156,6 +4162,7 @@ int16_t dlt_getloginfo_conv_ascii_to_uint16_t(char *rp, int *rp_count)
     num_work[1] = *(rp + *rp_count + 4);
     num_work[2] = *(rp + *rp_count + 0);
     num_work[3] = *(rp + *rp_count + 1);
+#endif
     num_work[4] = 0;
     *rp_count += 6;
 
